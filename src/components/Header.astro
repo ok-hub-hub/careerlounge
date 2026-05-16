@@ -1,0 +1,33 @@
+---
+import { SITE, NAV } from "../config";
+const pathname = Astro.url.pathname;
+---
+
+<header class="sticky top-0 z-20 border-b border-stone-200 bg-white/85 backdrop-blur">
+  <div class="mx-auto flex w-full max-w-5xl items-center justify-between gap-4 px-4 py-3 sm:px-6 lg:px-8">
+    <a href="/" class="flex items-baseline gap-2">
+      <span class="text-xl font-bold tracking-tight text-[var(--color-brand-600)]">{SITE.name}</span>
+      <span class="hidden text-xs text-stone-500 sm:inline">転職UGC</span>
+    </a>
+    <nav aria-label="グローバルナビゲーション" class="flex items-center gap-1 text-sm sm:gap-3">
+      {
+        NAV.map(item => {
+          const active = item.href === "/" ? pathname === "/" : pathname.startsWith(item.href);
+          return (
+            <a
+              href={item.href}
+              class:list={[
+                "rounded px-2 py-1 transition",
+                active
+                  ? "text-[var(--color-brand-600)] font-semibold"
+                  : "text-stone-600 hover:text-[var(--color-brand-600)]",
+              ]}
+            >
+              {item.label}
+            </a>
+          );
+        })
+      }
+    </nav>
+  </div>
+</header>

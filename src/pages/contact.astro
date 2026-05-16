@@ -1,0 +1,71 @@
+---
+import Layout from "../layouts/Layout.astro";
+import { SITE } from "../config";
+---
+
+<Layout title="お問い合わせ" description={`${SITE.name} へのお問い合わせ・取材依頼・削除依頼の窓口。`}>
+  <article class="prose-jp">
+    <h1 class="text-3xl font-bold tracking-tight text-stone-900">お問い合わせ</h1>
+    <p class="mt-2 text-sm text-stone-500">最終更新：2026-05-16</p>
+
+    <p>
+      {SITE.name} へのお問い合わせは、以下の用途別にメールアドレスへご連絡ください。Phase 1 では Web フォームを設置していません。
+      Phase 2 以降にフォーム化を予定しています。
+    </p>
+
+    <h2>用途別の連絡先</h2>
+    <table class="mt-4 w-full border-collapse text-sm">
+      <thead>
+        <tr class="border-b-2 border-stone-300 bg-stone-100">
+          <th class="px-4 py-3 text-left font-semibold text-stone-700">用途</th>
+          <th class="px-4 py-3 text-left font-semibold text-stone-700">対応内容</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr class="border-b border-stone-200">
+          <th class="bg-stone-50 px-4 py-3 text-left font-semibold text-stone-700">一般お問い合わせ</th>
+          <td class="px-4 py-3 text-stone-800">サイトに関するご質問・ご意見・ご要望</td>
+        </tr>
+        <tr class="border-b border-stone-200">
+          <th class="bg-stone-50 px-4 py-3 text-left font-semibold text-stone-700">取材・寄稿依頼</th>
+          <td class="px-4 py-3 text-stone-800">メディア取材・記事寄稿・編集連携のご相談</td>
+        </tr>
+        <tr class="border-b border-stone-200">
+          <th class="bg-stone-50 px-4 py-3 text-left font-semibold text-stone-700">広告・提携</th>
+          <td class="px-4 py-3 text-stone-800">純広告・タイアップ・エージェント提携のご相談（ステマ規制対応の上で対応）</td>
+        </tr>
+        <tr class="border-b border-stone-200">
+          <th class="bg-stone-50 px-4 py-3 text-left font-semibold text-stone-700">削除・訂正依頼</th>
+          <td class="px-4 py-3 text-stone-800">投稿の削除・訂正依頼、権利侵害申告、企業からの事実訂正依頼</td>
+        </tr>
+        <tr class="border-b border-stone-200">
+          <th class="bg-stone-50 px-4 py-3 text-left font-semibold text-stone-700">プライバシー関連</th>
+          <td class="px-4 py-3 text-stone-800">個人情報の開示・訂正・削除請求</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h2>連絡先</h2>
+    <p>
+      メール：<a href={`mailto:${SITE.email}`}>{SITE.email}</a>（Phase 1 暫定窓口）
+    </p>
+    <p class="text-sm text-stone-600">
+      ※ Phase 1 では返信に数日いただく場合があります。あらかじめご了承ください。
+    </p>
+
+    <h2>企業からの削除・訂正依頼について</h2>
+    <p>
+      口コミ対象企業・エージェント運営会社の関係者から、投稿内容に関する削除・訂正のご依頼を受け付けます。
+      以下の情報をご提供のうえ、上記メールアドレスへご連絡ください。
+    </p>
+    <ul>
+      <li>対象の投稿 URL または投稿 ID</li>
+      <li>削除・訂正を希望する箇所と理由（事実誤認・名誉毀損・営業秘密等）</li>
+      <li>ご担当者の氏名・所属・連絡先（本人確認のため）</li>
+      <li>権利侵害の場合は、侵害の根拠</li>
+    </ul>
+    <p>
+      ご依頼を確認次第、当サイトのモデレーション基準に照らして検討し、対応方針をご返信します。
+    </p>
+  </article>
+</Layout>

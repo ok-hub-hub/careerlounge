@@ -1,0 +1,74 @@
+---
+import Layout from "../layouts/Layout.astro";
+import { SITE } from "../config";
+---
+
+<Layout title="運営者情報" description={`${SITE.name} の運営者情報・特定商取引法に基づく表記。`}>
+  <article class="prose-jp">
+    <h1 class="text-3xl font-bold tracking-tight text-stone-900">運営者情報</h1>
+    <p class="mt-2 text-sm text-stone-500">最終更新：2026-05-16</p>
+
+    <h2>運営主体</h2>
+    <table class="mt-4 w-full border-collapse text-sm">
+      <tbody>
+        <tr class="border-b border-stone-200">
+          <th class="w-40 bg-stone-50 px-4 py-3 text-left font-semibold text-stone-700">サイト名</th>
+          <td class="px-4 py-3 text-stone-800">{SITE.name}（{SITE.domain}）</td>
+        </tr>
+        <tr class="border-b border-stone-200">
+          <th class="bg-stone-50 px-4 py-3 text-left font-semibold text-stone-700">運営者</th>
+          <td class="px-4 py-3 text-stone-800">{SITE.author}</td>
+        </tr>
+        <tr class="border-b border-stone-200">
+          <th class="bg-stone-50 px-4 py-3 text-left font-semibold text-stone-700">所在地</th>
+          <td class="px-4 py-3 text-stone-800">請求があった場合に遅滞なく開示します（特定商取引法上の住所開示請求対応）。</td>
+        </tr>
+        <tr class="border-b border-stone-200">
+          <th class="bg-stone-50 px-4 py-3 text-left font-semibold text-stone-700">連絡先</th>
+          <td class="px-4 py-3 text-stone-800"><a href="/contact/">お問い合わせフォーム</a></td>
+        </tr>
+        <tr class="border-b border-stone-200">
+          <th class="bg-stone-50 px-4 py-3 text-left font-semibold text-stone-700">事業内容</th>
+          <td class="px-4 py-3 text-stone-800">転職エージェント・転職市場に関する口コミ投稿・編集記事の提供。アフィリエイト広告収入による運営。</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h2>サイトの目的</h2>
+    <p>
+      {SITE.name} は、転職エージェント・転職体験談・年収口コミを、実体験ベースで投稿・比較・共有する UGC プラットフォームです。
+      年代・業界・職種を横断して使える転職判断材料を提供することを目指します。
+    </p>
+
+    <h2>編集ポリシー</h2>
+    <ul>
+      <li>すべての投稿に <strong>自費利用 / 提供 / PR / アフィリエイト関係</strong> の開示ラベルを必須付与します。</li>
+      <li>「絶対に転職できる」「必ず年収が上がる」のような断定表現は、運営が投稿時に検出・修正依頼を行います（YMYL 配慮）。</li>
+      <li>年収口コミは <strong>時期・業界・職種・地域</strong> をセットで表示し、誇張・偏向を抑制します。</li>
+      <li>会社名・部署名・個人を特定できる情報・誹謗中傷は、投稿前モデレーションで非公開化または匿名化します。</li>
+    </ul>
+
+    <h2>編集記事における順位・推奨の独立性</h2>
+    <p>
+      編集記事におけるエージェントの順位・推奨は、アフィリエイト報酬条件や提携金額の多寡で操作することはありません。
+      公平な評価基準で選定したうえで、各エージェントの紹介リンク（アフィリエイト）を併設しています。
+    </p>
+
+    <h2>Phase 1 の公開範囲</h2>
+    <p>
+      2026-05-16 時点では、ドメイン取得・サイト雛形・法令対応ページの整備フェーズです。
+      投稿フォーム、口コミ一覧、エージェント別ページ、比較記事は Phase 2 以降で順次公開します。
+    </p>
+
+    <h2>外部広告・アフィリエイト</h2>
+    <p>
+      本サイトでは、A8.net・もしもアフィリエイト・バリューコマース・TG アフィリエイトなどの ASP を通じた広告リンクを掲載予定です。
+      詳細は <a href="/pr-disclosure/">広告・PR 表示</a> をご覧ください。
+    </p>
+
+    <h2>個人情報の取り扱い</h2>
+    <p>
+      投稿者・お問い合わせ送信者から取得した情報の取り扱いは <a href="/privacy/">プライバシーポリシー</a> に定めます。
+    </p>
+  </article>
+</Layout>
