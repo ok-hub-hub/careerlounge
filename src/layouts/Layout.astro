@@ -2,18 +2,109 @@
 import "../styles/global.css";
 import Header from "../components/Header.astro";
 import Footer from "../components/Footer.astro";
-import { SITE } from "../config";
+import { SITE, ORGANIZATION, EDITORIAL_POLICY, ANALYTICS } from "../config";
 
 interface Props {
   title?: string;
   description?: string;
   ogType?: "website" | "article";
+  publishedAt?: string;
+  updatedAt?: string;
+  articleSection?: string;
+  breadcrumb?: Array<{ name: string; href: string }>;
+  faq?: Array<{ question: string; answer: string }>;
 }
 
-const { title, description, ogType = "website" } = Astro.props;
+const {
+  title,
+  description,
+  ogType = "website",
+  publishedAt,
+  updatedAt,
+  articleSection,
+  breadcrumb,
+  faq,
+} = Astro.props;
 const pageTitle = title ? `${title} | ${SITE.name}` : SITE.title;
 const pageDescription = description ?? SITE.description;
 const canonical = new URL(Astro.url.pathname, SITE.url).href;
+
+const organizationJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  name: ORGANIZATION.name,
+  url: SITE.url,
+  description: ORGANIZATION.description,
+  foundingDate: ORGANIZATION.foundingDate,
+  knowsAbout: ORGANIZATION.knowsAbout,
+};
+
+const websiteJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  name: SITE.name,
+  url: SITE.url,
+  description: SITE.description,
+  inLanguage: "ja-JP",
+  publisher: {
+    "@type": "Organization",
+    name: ORGANIZATION.name,
+  },
+};
+
+const articleJsonLd =
+  ogType === "article"
+    ? {
+        "@context": "https://schema.org",
+        "@type": "Article",
+        headline: pageTitle,
+        description: pageDescription,
+        url: canonical,
+        inLanguage: "ja-JP",
+        ...(publishedAt && { datePublished: publishedAt }),
+        ...(updatedAt && { dateModified: updatedAt }),
+        ...(articleSection && { articleSection }),
+        author: {
+          "@type": "Organization",
+          name: ORGANIZATION.name,
+          url: ORGANIZATION.editorialPolicyUrl,
+        },
+        publisher: {
+          "@type": "Organization",
+          name: ORGANIZATION.name,
+        },
+      }
+    : null;
+
+const breadcrumbJsonLd =
+  breadcrumb && breadcrumb.length > 0
+    ? {
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        itemListElement: breadcrumb.map((b, i) => ({
+          "@type": "ListItem",
+          position: i + 1,
+          name: b.name,
+          item: new URL(b.href, SITE.url).href,
+        })),
+      }
+    : null;
+
+const faqJsonLd =
+  faq && faq.length > 0
+    ? {
+        "@context": "https://schema.org",
+        "@type": "FAQPage",
+        mainEntity: faq.map((q) => ({
+          "@type": "Question",
+          name: q.question,
+          acceptedAnswer: {
+            "@type": "Answer",
+            text: q.answer,
+          },
+        })),
+      }
+    : null;
 ---
 
 <!doctype html>
@@ -30,12 +121,139 @@ const canonical = new URL(Astro.url.pathname, SITE.url).href;
     <meta property="og:description" content={pageDescription} />
     <meta property="og:type" content={ogType} />
     <meta property="og:url" content={canonical} />
+    <meta property="og:locale" content="ja_JP" />
     <meta name="twitter:card" content="summary_large_image" />
+    <meta name="robots" content="index, follow, max-image-preview:large" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    {
+      ANALYTICS.searchConsoleVerification && (
+        <meta
+          name="google-site-verification"
+          content={ANALYTICS.searchConsoleVerification}
+        />
+      )
+    }
+    <script
+      is:inline
+      type="application/ld+json"
+      set:html={JSON.stringify(organizationJsonLd)}
+    />
+    <script
+      is:inline
+      type="application/ld+json"
+      set:html={JSON.stringify(websiteJsonLd)}
+    />
+    {
+      articleJsonLd && (
+        <script
+          is:inline
+          type="application/ld+json"
+          set:html={JSON.stringify(articleJsonLd)}
+        />
+      )
+    }
+    {
+      breadcrumbJsonLd && (
+        <script
+          is:inline
+          type="application/ld+json"
+          set:html={JSON.stringify(breadcrumbJsonLd)}
+        />
+      )
+    }
+    {
+      faqJsonLd && (
+        <script
+          is:inline
+          type="application/ld+json"
+          set:html={JSON.stringify(faqJsonLd)}
+        />
+      )
+    }
+    {
+      ANALYTICS.gaMeasurementId && (
+        <>
+          <script
+            is:inline
+            async
+            src={`https://www.googletagmanager.com/gtag/js?id=${ANALYTICS.gaMeasurementId}`}
+          />
+          <script is:inline define:vars={{ id: ANALYTICS.gaMeasurementId }}>
+            window.dataLayer = window.dataLayer || [];
+            function gtag() {
+              dataLayer.push(arguments);
+            }
+            gtag("js", new Date());
+            gtag("config", id, { anonymize_ip: true });
+          </script>
+        </>
+      )
+    }
+    <!-- A8.net リンクマネージャー：公式URLを自動でA8アフィリリンクに置換 -->
+    <script is:inline src="//statics.a8.net/a8link/a8linkmgr.js"></script>
+    <script is:inline>
+      a8linkmgr({
+        "config_id": "AwCpjYs4q25StXZqogep"
+      });
+    </script>
+    <!-- アフィリエイトリンク click を GA4 イベントとして計測 -->
+    <script is:inline>
+      document.addEventListener("click", function (e) {
+        const a = e.target.closest && e.target.closest("a[rel*='sponsored'], a[rel*='nofollow']");
+        if (!a || !a.href) return;
+        const href = a.href;
+        if (a.hostname && a.hostname !== location.hostname) {
+          if (typeof gtag === "function") {
+            gtag("event", "affiliate_click", {
+              event_category: "outbound",
+              event_label: href,
+              transport_type: "beacon",
+              link_domain: a.hostname,
+              link_text: (a.textContent || "").trim().slice(0, 80),
+              page_path: location.pathname,
+            });
+          }
+        }
+      }, { passive: true, capture: true });
+    </script>
+
+    <!-- Microsoft Clarity -->
+    <script type="text/javascript" is:inline>
+      (function(c,l,a,r,i,t,y){
+        c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
+        t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
+        y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
+      })(window, document, "clarity", "script", "wtgz49wfn4");
+    </script>
+
+    <!-- nazo_lab (P-030) traffic Custom Tag -->
+    <script type="text/javascript" is:inline>
+      (function() {
+        function setNazoLabTag() {
+          try {
+            const params = new URLSearchParams(window.location.search);
+            const utm = params.get('utm_source');
+            const referrer = document.referrer || '';
+            const isNazoLab = utm === 'nazo_lab' ||
+                              referrer.includes('linktr.ee/nazolab') ||
+                              referrer.includes('linktr.ee/nazo_lab') ||
+                              referrer.includes('tiktok.com/@nazo_lab') ||
+                              referrer.includes('youtube.com/@nazo_lab') ||
+                              referrer.includes('instagram.com/nazo_lab');
+            if (isNazoLab && window.clarity) {
+              window.clarity('set', 'source', 'nazo_lab');
+              window.clarity('set', 'utm_campaign', utm || 'organic_nazolab');
+            }
+          } catch (e) { /* swallow */ }
+        }
+        if (document.readyState === 'complete') setNazoLabTag();
+        else window.addEventListener('load', setNazoLabTag);
+      })();
+    </script>
   </head>
-  <body class="min-h-screen bg-stone-50 text-stone-900 antialiased">
+  <body class="min-h-screen bg-[var(--color-paper-50)] text-stone-900 antialiased">
     <Header />
-    <main class="mx-auto w-full max-w-5xl px-4 py-10 sm:px-6 lg:px-8">
+    <main class="mx-auto w-full max-w-6xl px-4 py-10 sm:px-6 lg:px-8">
       <slot />
     </main>
     <Footer />
